@@ -1,0 +1,158 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.IO;
+
+namespace abc
+{
+    class Program
+    {
+        static void Main()
+        {
+            try
+            {
+                Customer customer = new Customer();
+                Console.WriteLine("Customer ID: ");
+                customer.CustomerID = Console.ReadLine();
+                Console.WriteLine("Customer Name: ");
+                customer.CustomerName = Console.ReadLine();
+                Console.WriteLine("Customer Address: ");
+                customer.Address = Console.ReadLine();
+                Console.WriteLine("Customer City: ");
+                customer.City = Console.ReadLine();
+                Console.WriteLine("Customer Phone: ");
+                customer.Phone = Console.ReadLine();
+                Console.WriteLine("Customer Credit Limit: ");
+                customer.CreditLimit = Convert.ToInt32(Console.ReadLine());
+
+                Console.WriteLine("Customer ID:" + customer.CustomerID);
+                Console.WriteLine("Customer Name:" + customer.CustomerName);
+                Console.WriteLine("Customer Address:" + customer.Address);
+                Console.WriteLine("Customer City:" + customer.City);
+                Console.WriteLine("Customer Phone:" + customer.Phone);
+                Console.WriteLine("Customer Credit Limit:" + customer.CreditLimit);
+            }
+            catch (Exception ex)
+            {
+                string content = $"\n\n{DateTime.Now} " +
+                $"\nMessage: {ex.Message}" +
+                $"\nStackTrace:{ex.StackTrace}" +
+                $"\nInner Exception: {ex.InnerException?.Message}" +
+                $"\nType:{ex.GetType().ToString()}";
+
+                StreamWriter sw = new StreamWriter(@"c:\CapG\Log.txt", true);
+                sw.Write(content);
+                sw.Close();
+
+                Console.WriteLine("Unexpected Error Occured, Please try again");
+            }
+            finally
+            {
+                Console.WriteLine("Thanks");
+            }
+            Console.ReadKey();
+        }
+    }
+    class CreditLimitException : Exception
+    {
+        public CreditLimitException(string message) : base(message) { }
+    }
+
+    class Customer
+    {
+        private string _customerID;
+        private string _customerName;
+        private string _address;
+        private string _city;
+        private string _phone;
+        public int creditLimit;
+
+        //properties
+        public string CustomerID
+        {
+            set
+            {
+                _customerID = value;
+            }
+            get
+            {
+                return _customerID;
+            }
+        }
+        public string CustomerName
+        {
+            set
+            {
+                _customerName = value;
+            }
+            get
+            {
+                return _customerName;
+            }
+        }
+        public string Address
+        {
+            set
+            {
+                _address = value;
+            }
+            get
+            {
+                return _address;
+            }
+        }
+        public string City
+        {
+            set
+            {
+                _city = value;
+            }
+            get
+            {
+                return _city;
+            }
+        }
+        public string Phone
+        {
+            set
+            {
+                _phone = value;
+            }
+            get
+            {
+                return _phone;
+            }
+        }
+        public int CreditLimit
+        {
+            set
+            {
+                if (value<50000)
+                {
+                    creditLimit = value;
+                }
+                else
+                {
+                    throw new CreditLimitException("Credit Limit should be less than 50000");
+                }
+            }
+            get
+            {
+                return creditLimit;
+            }
+        }
+
+        //constructors
+        public Customer() { }
+
+        public Customer(string cID, string cName, string cAdd, string cCity, string cPhone, int creditLim)
+        {
+            CustomerID = cID;
+            CustomerName = cName;
+            Address = cAdd;
+            City = cCity;
+            Phone = cPhone;
+            CreditLimit = creditLim;
+        }
+    }
+}
