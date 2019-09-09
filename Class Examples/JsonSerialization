@@ -32,6 +32,7 @@ namespace JsonSerializationExample
             string filePath = "c:\\CapG\\person.txt";
             StreamWriter sw = new StreamWriter(filePath);
             string conetent = JsonConvert.SerializeObject(person);
+            sw.Write(content);
             sw.Close();
 
             Console.WriteLine("Serialization Done");
