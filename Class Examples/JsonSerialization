@@ -38,13 +38,13 @@ namespace JsonSerializationExample
             Console.WriteLine("Serialization Done");
             Console.ReadKey();
 
-            /*Deserialization*/
+          /*Deserialization*/
             Person person2;//Object is created later no need to create here
-            FileStream fs2 = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            person2 = (Person)xmlSerializer.Deserialize(fs2);
+            StreamReader sr = new StreamReader(filePath);
+            person2 = JsonConvert.DeserializeObject<Person>(sr.ReadToEnd());
 
             Console.WriteLine("Person Name :" + person2.PersonName);
-            Console.WriteLine("Person age :" + person2.Age);
+            Console.WriteLine("Person age :" + person2.Age);                        
             Console.WriteLine("Gender :" + person2.Gender);
             Console.WriteLine("Ïs Registered :" + person2.IsRegistered);
             Console.ReadKey();
