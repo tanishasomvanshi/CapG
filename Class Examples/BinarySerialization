@@ -29,6 +29,10 @@ namespace BinarySerializationExample
             FileStream fs1 = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             binaryFormatter.Serialize(fs1, person);
+            fs1.Close();
+
+            Console.WriteLine("Serialization Done");
+            Console.ReadKey();
         }
     }
 }
