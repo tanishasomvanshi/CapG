@@ -33,6 +33,17 @@ namespace BinarySerializationExample
 
             Console.WriteLine("Serialization Done");
             Console.ReadKey();
+            
+            /*Deserialization*/
+            Person person2;//Object is created later no need to create here
+            FileStream fs2 = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            person2 = (Person)binaryFormatter.Deserialize(fs2);
+
+            Console.WriteLine("Person Name :" + person2.PersonName);
+            Console.WriteLine("Person age :" + person2.Age);
+            Console.WriteLine("Gender :" + person2.Gender);
+            Console.WriteLine("Ïs Registered :" + person2.IsRegistered);
+            Console.ReadKey();
         }
     }
 }
