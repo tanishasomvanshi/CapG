@@ -1,0 +1,64 @@
+using System;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace SymmetricEncryptionExample
+{
+    class Program
+    {
+        static void Main()
+        {
+            Console.WriteLine("Ënter your message:");
+            string message = Console.ReadLine();
+
+            byte[] iv = Encrypt(message, "c:\\CapG\\personinfo.txt");//iv is initialisation vector
+            Decrypt(iv, "c:\\CapG\\personinfo.txt");
+            Console.ReadKey();
+        }
+        static byte[] Encrypt(string message, string fileName)
+        {
+            //Create a new instance of the AesManaged
+            AesManaged aesAlgorithm = new AesManaged();
+            aesAlgorithm.Key = Encoding.ASCII.GetBytes("abcdefghijklmnop");//String to byte array
+
+            ICryptoTransform encryptor = aesAlgorithm.CreateEncryptor(aesAlgorithm.Key, aesAlgorithm.IV);
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                {
+                    using (StreamWriter writer = new StreamWriter(cs))
+                    {
+                        writer.WriteLine(message);
+                    }
+                }
+                byte[] encryptedData = ms.ToArray();
+                File.WriteAllBytes(fileName, encryptedData);
+            }
+            return aesAlgorithm.IV;
+        }
+        static void Decrypt(byte[] iv, string fileName)
+        {
+            AesManaged aesAlgorithm = new AesManaged();
+            aesAlgorithm.Key = Encoding.ASCII.GetBytes("abcdefghijklmnop");
+            aesAlgorithm.IV = iv;
+            ICryptoTransform decryptor = aesAlgorithm.CreateDecryptor(aesAlgorithm.Key, aesAlgorithm.IV);
+            byte[] encryptedDataBuffer = File.ReadAllBytes(fileName);
+            using (MemoryStream ms = new MemoryStream(encryptedDataBuffer))
+            {
+                using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                {
+                    using (StreamReader reader = new StreamReader(cs))
+                    {
+                        string actualMessage = reader.ReadToEnd();
+                        Console.WriteLine("Decrypted Message: ");
+                        Console.WriteLine(actualMessage);
+                    }
+                }
+                byte[] encryptedData = ms.ToArray();
+                File.WriteAllBytes(fileName, encryptedData);
+            }
+        }
+    }
+}
